@@ -21,7 +21,7 @@ export class MqttBridgeWeb extends WebPlugin implements MqttBridgePlugin {
       willQoS: number;
       setRetained: boolean;
     };
-  }): Promise<any> {
+  }): Promise<void> {
     // Log the `options` parameter
     console.log(options);
     // Throw an error indicating that this method is not implemented
@@ -29,7 +29,7 @@ export class MqttBridgeWeb extends WebPlugin implements MqttBridgePlugin {
   }
 
   // Implement the `disconnect` method from the `MqttBridgePlugin` interface
-  disconnect(): Promise<any> {
+  disconnect(): Promise<void> {
     // Throw an error indicating that this method is not implemented
     throw new Error('Method not implemented.');
   }
@@ -51,12 +51,13 @@ export class MqttBridgeWeb extends WebPlugin implements MqttBridgePlugin {
     payload: string;
     qos: number;
     retained: boolean;
+    correlationData?: string;
   }): Promise<{
     topic: string;
     payload: string;
     qos: number;
     retained: boolean;
-    messageId: any;
+    messageId: string;
   }> {
     // Log the `options` parameter
     console.log(options);
