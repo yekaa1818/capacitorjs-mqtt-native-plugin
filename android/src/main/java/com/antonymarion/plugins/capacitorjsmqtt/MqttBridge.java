@@ -21,7 +21,7 @@ import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
 
 
-public class MqttBridge implements MqttCallback {
+public class MqttBridge {
 
     // A constant string used as a tag for logging
     private static final String TAG = "MqttBridge";
@@ -168,7 +168,7 @@ public class MqttBridge implements MqttCallback {
                 }
 
                 public void mqttErrorOccurred(MqttException exception) {
-
+                    Log.d("MQTT", "Error: " + exception.getMessage());
                 }
 
                 public void messageArrived(String topic, MqttMessage message) {
@@ -176,6 +176,8 @@ public class MqttBridge implements MqttCallback {
                     JSObject data = new JSObject();
                     data.put("topic", topic);
                     data.put("message", message.toString());
+                    data.put("correlationData", message.getProperties().getCorrelationData().toString());
+                    data.put("responseTopic", message.getProperties().getResponseTopic().toString());
 
                     // Call the handleCallback method of the pluginInstance with the message data
                     pluginInstance.handleCallback(Constants.MESSAGE_ARRIVED_EVENT_NAME, data);
@@ -185,7 +187,7 @@ public class MqttBridge implements MqttCallback {
                 }
 
                 public void deliveryComplete(IMqttToken token) {
-
+                    Log.d("MQTT", "Delivery completed for token " + token.toString());
                 }
 
                 public void connectComplete(boolean reconnect, String serverURI) {
@@ -197,7 +199,7 @@ public class MqttBridge implements MqttCallback {
                 }
 
                 public void authPacketArrived(int reasonCode, MqttProperties properties) {
-
+                    Log.d("MQTT", "Auth. packet arrived");
                 }
             });
 

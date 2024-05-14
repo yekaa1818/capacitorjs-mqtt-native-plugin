@@ -1,6 +1,6 @@
 # CapacitorJS MQTT Native Plugin
 
-⚡️ This plugin enabzles CapacitorJS-powered Android mobile apps to connect to an MQTT broker and send/receive messages natively using TCP protocol.
+⚡️ This plugin enables CapacitorJS-powered Android mobile apps to connect to an MQTT broker and send/receive messages natively using TCP protocol.
 
 #### ⚠️ Note: Supports only for android for now.
 
@@ -352,6 +352,6 @@ Make all properties in T optional
 
 #### onMessageArrivedListener
 
-<code>(x: { topic: string; message: string; correlationData?: string; }): void</code>
+<code>(x: { topic: string; message: string; correlationData?: string; responseTopic?: string; }): void</code>
 
 </docgen-api>

@@ -18,6 +18,7 @@ export type onMessageArrivedListener = (x: {
   topic: string;
   message: string;
   correlationData?: string;
+  responseTopic?: string;
 }) => void;
 
 // Define the interface for the MqttBridgePlugin
