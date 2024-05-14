@@ -176,7 +176,7 @@ public class MqttBridge {
                     JSObject data = new JSObject();
                     data.put("topic", topic);
                     data.put("message", message.toString());
-                    data.put("correlationData", message.getProperties().getCorrelationData().toString());
+                    data.put("correlationData", new String(message.getProperties().getCorrelationData(), StandardCharsets.US_ASCII));
                     data.put("responseTopic", message.getProperties().getResponseTopic().toString());
 
                     // Call the handleCallback method of the pluginInstance with the message data
