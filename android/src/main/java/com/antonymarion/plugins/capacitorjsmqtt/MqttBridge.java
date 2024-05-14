@@ -14,10 +14,11 @@ import org.eclipse.paho.mqttv5.client.MqttClient;
 import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
+import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.eclipse.paho.mqttv5.client.MqttCallback;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
-
+import org.eclipse.paho.mqttv5.client.MqttCallback;
 
 
 public class MqttBridge implements MqttCallback {
@@ -136,10 +137,69 @@ public class MqttBridge implements MqttCallback {
         if (!isConnecting && (mqttClient == null || !mqttClient.isConnected())) {
             // Set isConnecting to true to avoid multiple connect requests
             isConnecting = true;
+
+            //  if (!dataDir.canWrite()) {
+            //      throw new MqttPersistenceException();
+            //  }
+
             // Create the MqttAndroidClient object
-            mqttClient = new MqttClient(fullURI, clientId);
+            // https://github.com/eclipse/paho.mqtt.android/issues/272
+            MemoryPersistence persistence = new MemoryPersistence();
+            mqttClient = new MqttClient(fullURI, clientId, persistence);
             // Set this as the callback for the MQTT client
-            mqttClient.setCallback(this);
+            mqttClient.setCallback(new MqttCallback() {
+                public void disconnected(MqttDisconnectResponse disconnectResponse) {
+                    // Create a JSObject to hold the connection lost data
+                    JSObject data = new JSObject();
+                    String message = "Client disconnected ";
+
+                    message += disconnectResponse.getReasonString();
+                    int reasonCode = disconnectResponse.getReturnCode();
+
+                    data.put("connectionStatus", "disconnected");
+                    data.put("reasonCode", reasonCode);
+                    data.put("message", message);
+
+                    // Call the handleCallback method of the pluginInstance with the connection lost data
+                    pluginInstance.handleCallback(Constants.CONNECTION_LOST_EVENT_NAME, data);
+
+                    // Print the message to the log for debugging purposes
+                    Log.d("MQTT", message);
+                }
+
+                public void mqttErrorOccurred(MqttException exception) {
+
+                }
+
+                public void messageArrived(String topic, MqttMessage message) {
+                    // Create a JSObject to hold the message data
+                    JSObject data = new JSObject();
+                    data.put("topic", topic);
+                    data.put("message", message.toString());
+
+                    // Call the handleCallback method of the pluginInstance with the message data
+                    pluginInstance.handleCallback(Constants.MESSAGE_ARRIVED_EVENT_NAME, data);
+
+                    // Print the message to the log for debugging purposes
+                    Log.d("MQTT", "Message arrived on topic " + topic + ": " + message.toString());
+                }
+
+                public void deliveryComplete(IMqttToken token) {
+
+                }
+
+                public void connectComplete(boolean reconnect, String serverURI) {
+                    JSObject data = new JSObject();
+                    data.put("reconnected", reconnect);
+                    data.put("serverURI", serverURI);
+
+                    pluginInstance.handleCallback(Constants.CONNECT_COMPLETE_EVENT_NAME, data);
+                }
+
+                public void authPacketArrived(int reasonCode, MqttProperties properties) {
+
+                }
+            });
 
             try {
                 // Attempt to connect to the MQTT broker using the provided options
@@ -185,10 +245,7 @@ public class MqttBridge implements MqttCallback {
 
         // Subscribe to the MQTT topic with the given qos
         try {
-            mqttClient.subscribe(
-                    topic,
-                    qos,
-                    null);
+            mqttClient.subscribe(topic,qos);
             // Create a JSObject to return the subscribed topic and qos
             JSObject data = new JSObject();
             data.put("topic", topic);
@@ -244,63 +301,7 @@ public class MqttBridge implements MqttCallback {
         }
     }
 
-    @Override
-    public void disconnected(MqttDisconnectResponse disconnectResponse) {
-        // Create a JSObject to hold the connection lost data
-        JSObject data = new JSObject();
-        String message = "Client disconnected ";
 
-        message += disconnectResponse.getReasonString();
-        int reasonCode = disconnectResponse.getReturnCode();
-
-        data.put("connectionStatus", "disconnected");
-        data.put("reasonCode", reasonCode);
-        data.put("message", message);
-
-        // Call the handleCallback method of the pluginInstance with the connection lost data
-        pluginInstance.handleCallback(Constants.CONNECTION_LOST_EVENT_NAME, data);
-
-        // Print the message to the log for debugging purposes
-        Log.d("MQTT", message);
-    }
-
-    @Override
-    public void mqttErrorOccurred(MqttException exception) {
-
-    }
-
-    @Override
-    public void messageArrived(String topic, MqttMessage message) {
-        // Create a JSObject to hold the message data
-        JSObject data = new JSObject();
-        data.put("topic", topic);
-        data.put("message", message.toString());
-
-        // Call the handleCallback method of the pluginInstance with the message data
-        pluginInstance.handleCallback(Constants.MESSAGE_ARRIVED_EVENT_NAME, data);
-
-        // Print the message to the log for debugging purposes
-        Log.d("MQTT", "Message arrived on topic " + topic + ": " + message.toString());
-    }
-
-    @Override
-    public void deliveryComplete(IMqttToken token) {
-
-    }
-
-    @Override
-    public void connectComplete(boolean reconnect, String serverURI) {
-        JSObject data = new JSObject();
-        data.put("reconnected", reconnect);
-        data.put("serverURI", serverURI);
-
-        pluginInstance.handleCallback(Constants.CONNECT_COMPLETE_EVENT_NAME, data);
-    }
-
-    @Override
-    public void authPacketArrived(int reasonCode, MqttProperties properties) {
-
-    }
 
 
 }
