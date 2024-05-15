@@ -282,8 +282,10 @@ public class MqttBridge {
         message.setRetained(retained);
 
         MqttProperties properties = new MqttProperties();
-        properties.setCorrelationData(correlationData.getBytes());
-        message.setProperties(properties);
+        if (correlationData!=null) {
+            properties.setCorrelationData(correlationData.getBytes());
+            message.setProperties(properties);
+        }
 
         try {
             // Publish the message to the topic using the mqttClient object

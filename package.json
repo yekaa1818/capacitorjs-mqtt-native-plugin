@@ -1,6 +1,6 @@
 {
   "name": "capacitorv6-mqtt-native-plugin",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "⚡️This is an easy-to-use CapacitorJS plugin library that enables your CapacitorJS-powered Android mobile app to connect to an MQTT broker and send/receive messages. With this plugin, you can easily implement MQTT v5 based communication in your Android CapacitorJS app natively using TCP protocol.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
