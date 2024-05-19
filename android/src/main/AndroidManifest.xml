@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yekaa.plugins.capacitorjsmqtt">
+    package="com.antonymarion.plugins.capacitorjsmqtt">
 
     <application>
         <service android:name="org.eclipse.paho.android.service.MqttService" />

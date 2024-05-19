@@ -1,4 +1,4 @@
-package com.yekaa.plugins.capacitorjsmqtt;
+package com.antonymarion.plugins.capacitorjsmqtt;
 
 public class Constants {
     public static final String CONNECTION_LOST_EVENT_NAME = "onConnectionLost";

@@ -17,6 +17,8 @@ export type onConnectCompleteListener = (x: {
 export type onMessageArrivedListener = (x: {
   topic: string;
   message: string;
+  correlationData?: string;
+  responseTopic?: string;
 }) => void;
 
 // Define the interface for the MqttBridgePlugin
@@ -38,10 +40,10 @@ export interface MqttBridgePlugin {
       willQoS: number;
       setRetained: boolean;
     };
-  }): Promise<any>;
+  }): Promise<void>;
 
   // Method to disconnect from the MQTT broker
-  disconnect(): Promise<any>;
+  disconnect(): Promise<void>;
 
   // Method to subscribe to an MQTT topic
   subscribe(options: {
@@ -55,29 +57,30 @@ export interface MqttBridgePlugin {
     payload: string;
     qos: number;
     retained: boolean;
+    correlationData?: string;
   }): Promise<{
     topic: string;
     payload: string;
     qos: number;
     retained: boolean;
-    messageId: any;
+    messageId: string;
   }>;
 
   // Method to add an event listener for the "onConnectionLost" event
   addListener(
     eventName: 'onConnectionLost',
     listener: onConnectionLostListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle> & Partial<PluginListenerHandle>;
 
   // Method to add an event listener for the "onConnectComplete" event
   addListener(
     eventName: 'onConnectComplete',
     listener: onConnectCompleteListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle> & Partial<PluginListenerHandle>;
 
   // Method to add an event listener for the "onMessageArrived" event
   addListener(
     eventName: 'onMessageArrived',
     listener: onMessageArrivedListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle> & Partial<PluginListenerHandle>;
 }

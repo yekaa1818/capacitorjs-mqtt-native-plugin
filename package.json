@@ -1,7 +1,7 @@
 {
-  "name": "capacitor-mqtt-native-plugin",
-  "version": "1.0.5",
-  "description": "⚡️This is an easy-to-use CapacitorJS plugin library that enables your CapacitorJS-powered Android mobile app to connect to an MQTT broker and send/receive messages. With this plugin, you can easily implement MQTT-based communication in your Android CapacitorJS app natively using TCP protocol.",
+  "name": "capacitorv6-mqtt-native-plugin",
+  "version": "2.1.2",
+  "description": "⚡️This is an easy-to-use CapacitorJS plugin library that enables your CapacitorJS-powered Android mobile app to connect to an MQTT broker and send/receive messages. With this plugin, you can easily implement MQTT v5 based communication in your Android CapacitorJS app natively using TCP protocol.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -13,14 +13,14 @@
     "ios/Plugin/",
     "CapacitorjsMqttBridge.podspec"
   ],
-  "author": "yekaa",
+  "author": "antonymarion",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kufayeka/capacitorjs-mqtt-native-plugin.git"
+    "url": "git+https://github.com/antonymarion/capacitorjs-mqtt-native-plugin.git"
   },
   "bugs": {
-    "url": "https://github.com/kufayeka/capacitorjs-mqtt-native-plugin/issues"
+    "url": "https://github.com/antonymarion/capacitorjs-mqtt-native-plugin/issues"
   },
   "keywords": [
     "capacitor",
@@ -44,10 +44,10 @@
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "@capacitor/android": "^4.0.0",
-    "@capacitor/core": "^4.0.0",
-    "@capacitor/docgen": "^0.0.18",
-    "@capacitor/ios": "^4.0.0",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "latest",
+    "@capacitor/ios": "^6.0.0",
+    "@capacitor/docgen": "latest",
     "@ionic/eslint-config": "^0.3.0",
     "@ionic/prettier-config": "^1.0.1",
     "@ionic/swiftlint-config": "^1.1.2",
@@ -57,10 +57,10 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.32.0",
     "swiftlint": "^1.0.1",
-    "typescript": "~4.1.5"
+    "typescript": "~5.4.5"
   },
   "peerDependencies": {
-    "@capacitor/core": "^4.0.0"
+    "@capacitor/core": "latest"
   },
   "prettier": "@ionic/prettier-config",
   "swiftlint": "@ionic/swiftlint-config",

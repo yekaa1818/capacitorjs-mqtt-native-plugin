@@ -1,9 +1,6 @@
-package com.yekaa.plugins.capacitorjsmqtt;
-
-import static org.eclipse.paho.client.mqttv3.MqttConnectOptions.MQTT_VERSION_3_1_1;
+package com.antonymarion.plugins.capacitorjsmqtt;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -11,19 +8,8 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.eclipse.paho.mqttv5.common.MqttException;
 
-import java.io.UnsupportedEncodingException;
 
 // Define a Capacitor plugin with the name "MqttBridge"
 @CapacitorPlugin(name = "MqttBridge")
@@ -44,19 +30,23 @@ public class MqttBridgePlugin extends Plugin {
     @Override
     public void handleOnDestroy() {
         // Disconnect the MQTT client
-        mqttBridge.disconnect(null);
+        try {
+            mqttBridge.disconnect(null);
+        } catch (MqttException e) {
+            throw new RuntimeException(e);
+        }
         super.handleOnDestroy();
     }
 
     // This method is a Capacitor plugin method that connects the MQTT client
     @PluginMethod
-    public void connect(PluginCall call) {
+    public void connect(PluginCall call) throws MqttException {
         mqttBridge.connect(call);
     }
 
     // This method is a Capacitor plugin method that disconnects the MQTT client
     @PluginMethod
-    public void disconnect(PluginCall call) {
+    public void disconnect(PluginCall call) throws MqttException {
         mqttBridge.disconnect(call);
     }
 
